@@ -79,10 +79,12 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     private void OnHostButton() {
+        Debug.Log($"eo");
         StartGame(GameMode.Host);
     }
 
     private void OnJoinButton() {
+        Debug.Log($"eo");
         StartGame(GameMode.Client);
     }
 

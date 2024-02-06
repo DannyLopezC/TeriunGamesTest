@@ -24,14 +24,14 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Awake() {
-        // ensure there is only one instance of the GameManager
+        // Ensure there is only one instance of the GameManager
         if (_instance != null && _instance != this) {
             Destroy(gameObject);
+            return;
         }
-        else {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public Action OnHostButton;
