@@ -8,6 +8,9 @@ using UnityEngine.SceneManagement;
 
 
 public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
+    [SerializeField] private NetworkPrefabRef _playerPrefab;
+    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+
     private void Start() {
         GameManager.Instance.OnHostButton += OnHostButton;
         GameManager.Instance.OnJoinButton += OnJoinButton;
@@ -16,12 +19,26 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     #region INTERFACE_METHODS
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        if (runner.IsServer) {
+            Vector3 spawnPos = new Vector3((player.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPos, Quaternion.identity, player);
+            _spawnedCharacters.Add(player, networkPlayerObject);
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
+        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject)) {
+            runner.Despawn(networkObject);
+            _spawnedCharacters.Remove(player);
+        }
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input) {
+        var data = new NetworkInputData();
+
+        
+
+        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) {
@@ -70,8 +87,10 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     async void StartGame(GameMode gameMode) {
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        GameManager.Instance.CloseButtons.Invoke();
 
         await _runner.StartGame(new StartGameArgs() {
+            GameMode = gameMode,
             SessionName = "Teriun Games Room",
             Scene = SceneManager.GetActiveScene().buildIndex,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
@@ -87,7 +106,7 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     private void OnDestroy() {
-        GameManager.Instance.OnHostButton -= OnHostButton;
-        GameManager.Instance.OnJoinButton -= OnJoinButton;
+        /*GameManager.Instance.OnHostButton -= OnHostButton;
+        GameManager.Instance.OnJoinButton -= OnJoinButton;*/
     }
 }

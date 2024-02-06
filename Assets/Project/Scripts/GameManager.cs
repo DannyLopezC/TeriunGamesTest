@@ -36,4 +36,7 @@ public class GameManager : MonoBehaviour {
 
     public Action OnHostButton;
     public Action OnJoinButton;
+    public Action CloseButtons;
+
+    public Action<string> SetPlayerName;
 }
