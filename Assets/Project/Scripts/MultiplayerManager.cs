@@ -36,7 +36,12 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnInput(NetworkRunner runner, NetworkInput input) {
         var data = new NetworkInputData();
 
-        
+        Vector2 _moveInputVector = Vector3.zero;
+
+        _moveInputVector.x = Input.GetAxis("Horizontal");
+        _moveInputVector.y = Input.GetAxis("Vertical");
+
+        data.MovementInput = _moveInputVector;
 
         input.Set(data);
     }
