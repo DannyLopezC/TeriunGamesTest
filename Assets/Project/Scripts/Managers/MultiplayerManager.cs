@@ -20,6 +20,7 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
         if (runner.IsServer) {
+            GameManager.Instance.CloseButtons.Invoke();
             Vector3 spawnPos = new Vector3((player.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPos, Quaternion.identity, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
@@ -90,9 +91,14 @@ public class MultiplayerManager : MonoBehaviour, INetworkRunnerCallbacks {
     private NetworkRunner _runner;
 
     async void StartGame(GameMode gameMode) {
-        _runner = gameObject.AddComponent<NetworkRunner>();
+        if (_runner == null) {
+            _runner = gameObject.AddComponent<NetworkRunner>();
+        }
+        else {
+            _runner = GetComponent<NetworkRunner>();
+        }
+
         _runner.ProvideInput = true;
-        GameManager.Instance.CloseButtons.Invoke();
 
         await _runner.StartGame(new StartGameArgs() {
             GameMode = gameMode,

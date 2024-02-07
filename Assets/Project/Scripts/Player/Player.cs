@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Player : NetworkBehaviour {
@@ -13,21 +14,17 @@ public class Player : NetworkBehaviour {
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform orientation;
+    [SerializeField] private Transform body;
 
     [SerializeField] private float speed = 6;
-
-    private CharacterController _characterController;
 
     private string _playerName;
 
     [SerializeField] private TMP_Text _playerNameText;
 
-    private void Awake() {
-        _characterController = GetComponent<CharacterController>();
-    }
-
     private void Start() {
         GameManager.Instance.SetPlayerName += SetName;
+        GameManager.Instance.SetCameraProperties.Invoke(orientation, transform, body);
     }
 
     private void Update() {
@@ -43,8 +40,6 @@ public class Player : NetworkBehaviour {
 
     public override void FixedUpdateNetwork() {
         if (GetInput(out NetworkInputData data)) {
-            Debug.Log($"data {data.MovementInput}");
-
             Vector3 moveDirection =
                 orientation.forward * data.MovementInput.y + orientation.right * data.MovementInput.x;
 

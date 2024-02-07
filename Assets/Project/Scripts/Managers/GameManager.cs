@@ -39,4 +39,5 @@ public class GameManager : MonoBehaviour {
     public Action CloseButtons;
 
     public Action<string> SetPlayerName;
+    public Action<Transform, Transform, Transform> SetCameraProperties;
 }
