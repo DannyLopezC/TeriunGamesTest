@@ -1105,7 +1105,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 199816613703433104, guid: b0fcbae959b5bce4098e681dd7e3e558, type: 3}
       propertyPath: Flags
-      value: 2561
+      value: 133633
       objectReference: {fileID: 0}
     - target: {fileID: 199816613703433104, guid: b0fcbae959b5bce4098e681dd7e3e558, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
@@ -1161,7 +1161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8665963660286733101, guid: b0fcbae959b5bce4098e681dd7e3e558, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
